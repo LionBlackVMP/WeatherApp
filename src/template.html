@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+ <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="wrapper">
+        <header class="header">
+          <nav class="navbar bg-light">
+            <div class="container">
+              <a class="navbar-brand" href="#">
+               <img src="./img/logo.svg" alt="" width="30" class="d-inline-block align-text-top">
+                Weather Today
+              </a>
+            </div>
+          </nav>
+       </header>
+      <main class="main">
+        <section class="section_one container">
+          <div class="weather">
+           <div class="row">
+          <div class="col-8">
+           
+            <form id="search-form">
+              <div class="row">
+             <div class="col-8 city">
+              <input
+                type="text"
+                id="city"
+                placeholder="Type a city.."
+                autofocus="on"
+                autocomplete="off"
+                class="form-control shadow-sm"
+                /></div>
+                <div class="col-4 city">
+              <input type="submit" value="Search" 
+              class="form-control btn btn-dark shadow-sm"
+              ></div>
+              
+             </div>
+            </form>
+           
+            <ul class="weather-info">
+              <li id="city-name"></li>
+              <li id="time"></li>
+              <li id="wind">Wind: 35 km/h</li>
+              <li id="humidity">Humidity: 44%</li>
+              <li id="pressure">Pressure</li>
+             
+              
+            </ul>
+          </div>
+
+          <div class="col-4">
+            <img
+              src="https://img.icons8.com/cotton/128/000000/sun--v2.png"
+              class="picture"
+            />
+            <p class="picture_temperature">
+              <span class="temperature" id="temperature"> 19</span><span class="picture_text">°<a href="#" id="celsius">C</a> | °<a href="#" id="fahrenheit">F</a></p>
+          </span></div>
+          <div class="row">
+            <div class="col">
+              <img
+                src="https://img.icons8.com/cotton/64/000000/partly-cloudy-day--v2.png"
+              />
+              <p>Monday <br />+15°C</p>
+            </div>
+            <div class="col">
+              <img
+                src="https://img.icons8.com/cotton/64/000000/partly-cloudy-day--v2.png"
+              />
+              <p>Monday <br />+15°C</p>
+            </div>
+            <div class="col">
+              <img
+                src="https://img.icons8.com/cotton/64/000000/partly-cloudy-day--v2.png"
+              />
+              <p>Monday <br />+15°C</p>
+            </div>
+            <div class="col">
+              <img
+                src="https://img.icons8.com/cotton/64/000000/partly-cloudy-day--v2.png"
+              />
+              <p>Monday <br />+15°C</p>
+            </div>
+            <div class="col">
+              <img
+                src="https://img.icons8.com/cotton/64/000000/partly-cloudy-day--v2.png"
+              />
+              <p>Monday <br />+15°C</p>
+            </div>
+          
+          </div>
+          </div>
+        </div></section>
+      </main>
+
+    </div>
+    
+    </body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve --open  --mode=development",
+    "dev": "webpack  --mode=development",
+    "build": "webpack  --mode=production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "description": "",
+  "devDependencies": {
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@popperjs/core": "^2.11.6",
+    "axios": "^1.2.0",
+    "babel-loader": "^9.1.0",
+    "bootstrap": "^5.2.3",
+    "css-loader": "^6.7.2",
+    "dotenv-webpack": "^8.0.1",
+    "git": "^0.1.5",
+    "html-loader": "^4.2.0",
+    "mini-css-extract-plugin": "^2.7.0",
+    "postcss": "^8.4.19",
+    "postcss-loader": "^7.0.1",
+    "postcss-preset-env": "^7.8.3",
+    "sass": "^1.56.1",
+    "sass-loader": "^13.2.0",
+    "style-loader": "^3.3.1",
+    "webpack-dev-server": "^4.11.1",
+    "yarn-git-install": "^0.4.7"
+  }
+}
