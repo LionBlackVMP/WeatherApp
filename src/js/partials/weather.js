@@ -1,3 +1,5 @@
+const { main } = require("@popperjs/core");
+
 window.onload = function () {
   const apiKeys = process.env.apiKey;
   const time = document.querySelector("#time");
@@ -14,6 +16,11 @@ window.onload = function () {
   const fifthDay = document.querySelector("#fifthDay");
   const celsius = document.querySelector(".celsius");
   const fahrenheit = document.querySelector(".fahrenheit");
+  const mainWeatherIcon = document.querySelector(".mainWeatherIcon");
+  const secondWeatherIcon = document.querySelector(".secondWeatherIcon");
+  const thirdWeatherIcon = document.querySelector(".thirdWeatherIcon");
+  const fourthWeatherIcon = document.querySelector(".fourthWeatherIcon");
+  const fifthWeatherIcon = document.querySelector(".fifthWeatherIcon");
   const currentDate = new Date();
   const MetricUnitOfMeasurement = "metric";
 
@@ -45,27 +52,30 @@ window.onload = function () {
     }
 
     const apiURL = `http://api.openweathermap.org/data/2.5/forecast?q=${cityForRequest}&units=${unitsOfMeasurement}`;
-    axios.get(`${apiURL}&appid=${apiKeys}`).then(renderToDayWeatherInfoRequest);
+    axios.get(`${apiURL}&appid=${apiKeys}`).then(renderTodayWeatherInfoRequest);
   }
 
-  function renderToDayWeatherInfoRequest(apiObj) {
+  function renderTodayWeatherInfoRequest(apiObj) {
     const weatherArray = apiObj.data.list;
+
     const avrTempRequest = weatherArray[0].main.temp;
     const windDirectionRequest = weatherArray[0].wind.deg;
     const pressureRequest = weatherArray[0].main.pressure;
     const humidityRequest = weatherArray[0].main.humidity;
     const cityForRequest = localStorage.getItem("city");
     let windSpeedRequest = weatherArray[0].wind.speed;
-    console.log(windSpeedRequest);
+    iconWeatherRender(0, weatherArray);
     let unitsOfMeasurement = localStorage.getItem("unitsOfMeasurement");
     windSpeedRequest =
       unitsOfMeasurement == "metric"
         ? String(Math.round(windSpeedRequest * 3.6) + " km/h")
         : String(Math.round(windSpeedRequest) + " mil/h");
-    console.log(weatherArray[0]);
+
     time.innerText = currentTime;
     let dayNumber = 1;
     for (dayNumber; dayNumber < 5; dayNumber++) {
+      console.log(dayNumber);
+      iconWeatherRender(dayNumber, weatherArray);
       renderWeatherInfoOnNextDays(dayNumber, weatherArray);
     }
     windDirection(windDirectionRequest);
@@ -112,15 +122,15 @@ window.onload = function () {
     let dayTemp = Math.max.apply(null, oneDayTempDay);
     nightTemp = Math.round(nightTemp);
     dayTemp = Math.round(dayTemp);
-
+    let dayText = `${day} \n ${dayTemp}° ${nightTemp}°  `;
     dayNumber === 1
-      ? (secondDay.innerText = `${day} \n ${dayTemp}° ${nightTemp}°  `)
+      ? (secondDay.innerText = dayText)
       : dayNumber === 2
-      ? (thirdDay.innerText = `${day} \n ${dayTemp}° ${nightTemp}°  `)
+      ? (thirdDay.innerText = dayText)
       : dayNumber === 3
-      ? (fourthDay.innerText = `${day} \n ${dayTemp}° ${nightTemp}°  `)
+      ? (fourthDay.innerText = dayText)
       : dayNumber === 4
-      ? (fifthDay.innerText = `${day} \n ${dayTemp}° ${nightTemp}°  `)
+      ? (fifthDay.innerText = dayText)
       : console.log("error");
   }
   function windDirection(wind) {
@@ -141,6 +151,28 @@ window.onload = function () {
         ? "West"
         : "North-West";
   }
+  function iconWeatherRender(dayNumber, weatherArray) {
+    console.log(weatherArray[dayNumber].weather[0].main);
+    let weatherIconRequest = weatherArray[dayNumber].weather[0].main;
+    switch (dayNumber) {
+      case 0:
+        mainWeatherIcon.classList.add(weatherIconRequest);
+      case 1:
+        secondWeatherIcon.classList.add(weatherIconRequest);
+      case 2:
+        thirdWeatherIcon.classList.add(weatherIconRequest);
+      case 3:
+        fourthWeatherIcon.classList.add(weatherIconRequest);
+      case 4:
+        fifthWeatherIcon.classList.add(weatherIconRequest);
+    }
+    // renderMainWeatherIcon;
+    // renderWeatherIcon =
+    //   weatherIconRequest == "Clouds"
+    //     ? mainWeatherIcon.classList.add("Clouds")
+    //     : "no";
+  }
+
   processWeatherInfoRequest();
   searchSity.addEventListener("submit", processWeatherInfoRequest);
   celsius.addEventListener("click", (e) => {
