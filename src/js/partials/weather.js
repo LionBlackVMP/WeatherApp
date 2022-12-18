@@ -10,20 +10,34 @@ window.onload = function () {
   const pressure = document.querySelector("#pressure");
   const humidity = document.querySelector("#humidity");
   const searchSity = document.querySelector("#search-form");
-  const secondDay = document.querySelector("#secondDay");
-  const thirdDay = document.querySelector("#thirdDay");
-  const fourthDay = document.querySelector("#fourthDay");
-  const fifthDay = document.querySelector("#fifthDay");
+  const weekDaysId = [
+    "#temperature",
+    "#secondDay",
+    "#thirdDay",
+    "#fourthDay",
+    "#fifthDay",
+  ];
+  const weekDays = document.querySelectorAll(weekDaysId);
   const celsius = document.querySelector(".celsius");
   const fahrenheit = document.querySelector(".fahrenheit");
-  const mainWeatherIcon = document.querySelector(".mainWeatherIcon");
-  const secondWeatherIcon = document.querySelector(".secondWeatherIcon");
-  const thirdWeatherIcon = document.querySelector(".thirdWeatherIcon");
-  const fourthWeatherIcon = document.querySelector(".fourthWeatherIcon");
-  const fifthWeatherIcon = document.querySelector(".fifthWeatherIcon");
-  const currentDate = new Date();
   const MetricUnitOfMeasurement = "metric";
-
+  const weatherIconsClasses = [
+    ".mainWeatherIcon",
+    ".secondWeatherIcon",
+    ".thirdWeatherIcon",
+    ".fourthWeatherIcon",
+    ".fifthWeatherIcon",
+  ];
+  let icon = JSON.parse(localStorage.getItem("icon")) || [];
+  const weatherIcons = document.querySelectorAll(weatherIconsClasses);
+  const currentDate = new Date();
+  const currentUTCDate = new Date(
+    currentDate.getUTCFullYear(),
+    currentDate.getUTCMonth(),
+    currentDate.getUTCDate(),
+    currentDate.getUTCHours(),
+    currentDate.getUTCMinutes()
+  ).getTime();
   const options = {
     weekday: "long",
     month: "short",
@@ -31,12 +45,12 @@ window.onload = function () {
     hour: "2-digit",
     minute: "numeric",
   };
-  const currentTime = currentDate.toLocaleDateString("en-GB", options);
 
   function processWeatherInfoRequest(event) {
     if (event) {
       event.preventDefault();
     }
+
     let unitsOfMeasurement = localStorage.getItem("unitsOfMeasurement");
     if (!unitsOfMeasurement) {
       unitsOfMeasurement = MetricUnitOfMeasurement;
@@ -63,20 +77,25 @@ window.onload = function () {
     const pressureRequest = weatherArray[0].main.pressure;
     const humidityRequest = weatherArray[0].main.humidity;
     const cityForRequest = localStorage.getItem("city");
+    const cityTimezone = apiObj.data.city.timezone * 1000;
+
+    let localTime = new Date(currentUTCDate + cityTimezone);
+    const currentLocalTime = localTime.toLocaleDateString("en-GB", options);
+    time.innerText = currentLocalTime;
     let windSpeedRequest = weatherArray[0].wind.speed;
-    iconWeatherRender(0, weatherArray);
     let unitsOfMeasurement = localStorage.getItem("unitsOfMeasurement");
     windSpeedRequest =
       unitsOfMeasurement == "metric"
         ? String(Math.round(windSpeedRequest * 3.6) + " km/h")
         : String(Math.round(windSpeedRequest) + " mil/h");
 
-    time.innerText = currentTime;
-    let dayNumber = 1;
+    let dayNumber = 0;
+    deleteOldWeatherIcon(dayNumber);
     for (dayNumber; dayNumber < 5; dayNumber++) {
-      console.log(dayNumber);
-      iconWeatherRender(dayNumber, weatherArray);
-      renderWeatherInfoOnNextDays(dayNumber, weatherArray);
+      iconWeatherRender(dayNumber, apiObj.data, cityTimezone);
+      if (dayNumber != 0) {
+        renderWeatherInfoOnNextDays(dayNumber, weatherArray);
+      }
     }
     windDirection(windDirectionRequest);
     cityName.innerText = cityForRequest;
@@ -113,25 +132,14 @@ window.onload = function () {
     oneDayWeatherInfo.forEach((element) => {
       let result = element.main.temp;
       oneDayTemp.push(result);
-
-      Math.max(element.main.temp);
     });
-    let oneDayTempNight = oneDayTemp.splice(0, 4);
-    oneDayTempDay = oneDayTemp;
-    let nightTemp = Math.min.apply(null, oneDayTempNight);
-    let dayTemp = Math.max.apply(null, oneDayTempDay);
+
+    let nightTemp = Math.min.apply(null, oneDayTemp);
+    let dayTemp = Math.max.apply(null, oneDayTemp);
     nightTemp = Math.round(nightTemp);
     dayTemp = Math.round(dayTemp);
     let dayText = `${day} \n ${dayTemp}° ${nightTemp}°  `;
-    dayNumber === 1
-      ? (secondDay.innerText = dayText)
-      : dayNumber === 2
-      ? (thirdDay.innerText = dayText)
-      : dayNumber === 3
-      ? (fourthDay.innerText = dayText)
-      : dayNumber === 4
-      ? (fifthDay.innerText = dayText)
-      : console.log("error");
+    weekDays[dayNumber].innerText = dayText;
   }
   function windDirection(wind) {
     direction =
@@ -151,43 +159,43 @@ window.onload = function () {
         ? "West"
         : "North-West";
   }
-  function iconWeatherRender(dayNumber, weatherArray) {
-    console.log(weatherArray[dayNumber].weather[0].main);
-    let weatherIconRequest = weatherArray[dayNumber].weather[0].main;
-    switch (dayNumber) {
-      case 0:
-        mainWeatherIcon.classList.add(weatherIconRequest);
-      case 1:
-        secondWeatherIcon.classList.add(weatherIconRequest);
-      case 2:
-        thirdWeatherIcon.classList.add(weatherIconRequest);
-      case 3:
-        fourthWeatherIcon.classList.add(weatherIconRequest);
-      case 4:
-        fifthWeatherIcon.classList.add(weatherIconRequest);
+  function deleteOldWeatherIcon(dayNumber) {
+    for (dayNumber; dayNumber < 5; dayNumber++) {
+      console.log(icon);
+      weatherIcons[dayNumber].classList.remove(icon[0]);
+      icon.shift();
     }
-    // renderMainWeatherIcon;
-    // renderWeatherIcon =
-    //   weatherIconRequest == "Clouds"
-    //     ? mainWeatherIcon.classList.add("Clouds")
-    //     : "no";
+  }
+  function iconWeatherRender(dayNumber, weatherArray, cityTimezone) {
+    const weatherIconRequest = weatherArray.list[dayNumber].weather[0].main;
+    let nightHours = currentDate.getHours() + cityTimezone;
+
+    dayNumber == 0 && nightHours > 20 && nightHours < 6
+      ? (weatherIcons[dayNumber].classList.add(`night${weatherIconRequest}`),
+        icon.push(`night${weatherIconRequest}`))
+      : (weatherIcons[dayNumber].classList.add(weatherIconRequest),
+        icon.push(`${weatherIconRequest}`));
+
+    localStorage.setItem("icon", JSON.stringify(icon));
   }
 
   processWeatherInfoRequest();
-  searchSity.addEventListener("submit", processWeatherInfoRequest);
+  searchSity.addEventListener(
+    "submit",
+
+    processWeatherInfoRequest
+  );
   celsius.addEventListener("click", (e) => {
     if (e.target.className == "celsius") {
-      const unitsOfMeasurement = "metric";
-      localStorage.setItem("unitsOfMeasurement", unitsOfMeasurement);
-
-      processWeatherInfoRequest(event, unitsOfMeasurement);
+      localStorage.setItem("unitsOfMeasurement", MetricUnitOfMeasurement);
+      processWeatherInfoRequest(event, MetricUnitOfMeasurement);
     }
   });
   fahrenheit.addEventListener("click", (e) => {
     if (e.target.className == "fahrenheit") {
-      const unitsOfMeasurement = "imperial";
-      localStorage.setItem("unitsOfMeasurement", unitsOfMeasurement);
-      processWeatherInfoRequest(event, unitsOfMeasurement);
+      const MetricUnitOfMeasurement = "imperial";
+      localStorage.setItem("unitsOfMeasurement", MetricUnitOfMeasurement);
+      processWeatherInfoRequest(event, MetricUnitOfMeasurement);
     }
   });
 };

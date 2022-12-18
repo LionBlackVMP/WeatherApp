@@ -29,6 +29,15 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.html$/i,
+        loader: "html-loader",
+        options: {},
+      },
+      {
+        test: /\.(jpg|png|svg)$/,
+        type: "asset/resource",
+      },
+      {
         test: /\.m?js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
@@ -39,16 +48,12 @@ module.exports = {
         },
       },
       {
-        test: /\.html$/i,
-        loader: "html-loader",
-        options: {},
-      },
-      {
         test: /\.(sa|sc|c)ss$/,
         use: [
           MiniCssExtractPlugin.loader,
           "css-loader",
           "sass-loader",
+
           {
             loader: "postcss-loader",
             options: {
