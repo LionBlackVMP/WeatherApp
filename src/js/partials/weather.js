@@ -1,65 +1,63 @@
 const { main } = require("@popperjs/core");
+const apiKeys = process.env.apiKey;
+const time = document.querySelector("#time");
+const city = document.querySelector("#city");
+const cityName = document.querySelector("#city-name");
+const mainTemperature = document.querySelector("#temperature");
+const wind = document.querySelector("#wind");
+const pressure = document.querySelector("#pressure");
+const humidity = document.querySelector("#humidity");
+const searchSity = document.querySelector("#search-form");
+const weekDaysId = [
+  "#temperature",
+  "#secondDay",
+  "#thirdDay",
+  "#fourthDay",
+  "#fifthDay",
+];
+const weekDays = document.querySelectorAll(weekDaysId);
+const celsius = document.querySelector(".celsius");
+const fahrenheit = document.querySelector(".fahrenheit");
+const MetricUnitOfMeasurement = "metric";
+const weatherIconsClasses = [
+  ".mainWeatherIcon",
+  ".secondWeatherIcon",
+  ".thirdWeatherIcon",
+  ".fourthWeatherIcon",
+  ".fifthWeatherIcon",
+];
+let icon = JSON.parse(localStorage.getItem("icon")) || [];
+const weatherIcons = document.querySelectorAll(weatherIconsClasses);
+const currentDate = new Date();
+const currentUTCDate = new Date(
+  currentDate.getUTCFullYear(),
+  currentDate.getUTCMonth(),
+  currentDate.getUTCDate(),
+  currentDate.getUTCHours(),
+  currentDate.getUTCMinutes()
+).getTime();
+const options = {
+  weekday: "long",
+  month: "short",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "numeric",
+};
 
 window.onload = function () {
-  const apiKeys = process.env.apiKey;
-  const time = document.querySelector("#time");
-  const city = document.querySelector("#city");
-  const cityName = document.querySelector("#city-name");
-  const mainTemperature = document.querySelector("#temperature");
-  const wind = document.querySelector("#wind");
-  const pressure = document.querySelector("#pressure");
-  const humidity = document.querySelector("#humidity");
-  const searchSity = document.querySelector("#search-form");
-  const weekDaysId = [
-    "#temperature",
-    "#secondDay",
-    "#thirdDay",
-    "#fourthDay",
-    "#fifthDay",
-  ];
-  const weekDays = document.querySelectorAll(weekDaysId);
-  const celsius = document.querySelector(".celsius");
-  const fahrenheit = document.querySelector(".fahrenheit");
-  const MetricUnitOfMeasurement = "metric";
-  const weatherIconsClasses = [
-    ".mainWeatherIcon",
-    ".secondWeatherIcon",
-    ".thirdWeatherIcon",
-    ".fourthWeatherIcon",
-    ".fifthWeatherIcon",
-  ];
-  let icon = JSON.parse(localStorage.getItem("icon")) || [];
-  const weatherIcons = document.querySelectorAll(weatherIconsClasses);
-  const currentDate = new Date();
-  const currentUTCDate = new Date(
-    currentDate.getUTCFullYear(),
-    currentDate.getUTCMonth(),
-    currentDate.getUTCDate(),
-    currentDate.getUTCHours(),
-    currentDate.getUTCMinutes()
-  ).getTime();
-  const options = {
-    weekday: "long",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "numeric",
-  };
-
   function processWeatherInfoRequest(event) {
     if (event) {
       event.preventDefault();
     }
 
     let unitsOfMeasurement = localStorage.getItem("unitsOfMeasurement");
+
     if (!unitsOfMeasurement) {
       unitsOfMeasurement = MetricUnitOfMeasurement;
     }
     let cityForRequest = city.value.trim();
     if (cityForRequest) {
-      let cityForRequestLetterCase =
-        cityForRequest[0].toUpperCase() + cityForRequest.slice(1).toLowerCase();
-      localStorage.setItem("city", cityForRequestLetterCase);
+      localStorage.setItem("city", cityForRequest);
     }
     if (!cityForRequest) {
       cityForRequest = localStorage.getItem("city");
@@ -101,7 +99,7 @@ window.onload = function () {
     cityName.innerText = cityForRequest;
     mainTemperature.innerText = Math.round(avrTempRequest);
     wind.innerText = `Wind: ${windSpeedRequest}, ${direction} `;
-    pressure.innerText = `Pressure: ${pressureRequest}`;
+    pressure.innerText = `Pressure: ${pressureRequest} hPa`;
     humidity.innerText = `Humidity: ${humidityRequest}%`;
 
     city.value = "";
@@ -138,8 +136,10 @@ window.onload = function () {
     let dayTemp = Math.max.apply(null, oneDayTemp);
     nightTemp = Math.round(nightTemp);
     dayTemp = Math.round(dayTemp);
-    let dayText = `${day} \n ${dayTemp}° ${nightTemp}°  `;
-    weekDays[dayNumber].innerText = dayText;
+
+    let dayText = `${day} <p>${dayTemp}° <span>${nightTemp}°</span></p>`;
+
+    weekDays[dayNumber].innerHTML = dayText;
   }
   function windDirection(wind) {
     direction =
@@ -161,7 +161,6 @@ window.onload = function () {
   }
   function deleteOldWeatherIcon(dayNumber) {
     for (dayNumber; dayNumber < 5; dayNumber++) {
-      console.log(icon);
       weatherIcons[dayNumber].classList.remove(icon[0]);
       icon.shift();
     }
@@ -185,17 +184,34 @@ window.onload = function () {
 
     processWeatherInfoRequest
   );
-  celsius.addEventListener("click", (e) => {
-    if (e.target.className == "celsius") {
-      localStorage.setItem("unitsOfMeasurement", MetricUnitOfMeasurement);
-      processWeatherInfoRequest(event, MetricUnitOfMeasurement);
-    }
+
+  celsius.addEventListener("click", () => {
+    localStorage.setItem("unitsOfMeasurement", MetricUnitOfMeasurement);
+    processWeatherInfoRequest(event, MetricUnitOfMeasurement);
+    selectDegree();
   });
-  fahrenheit.addEventListener("click", (e) => {
-    if (e.target.className == "fahrenheit") {
-      const MetricUnitOfMeasurement = "imperial";
-      localStorage.setItem("unitsOfMeasurement", MetricUnitOfMeasurement);
-      processWeatherInfoRequest(event, MetricUnitOfMeasurement);
-    }
+  fahrenheit.addEventListener("click", () => {
+    const MetricUnitOfMeasurement = "imperial";
+    localStorage.setItem("unitsOfMeasurement", MetricUnitOfMeasurement);
+
+    processWeatherInfoRequest(event, MetricUnitOfMeasurement);
+    selectDegree();
   });
+  selectDegree();
+  function selectDegree() {
+    let unitsOfMeasurement = localStorage.getItem("unitsOfMeasurement");
+    if (unitsOfMeasurement) {
+      if (unitsOfMeasurement == "metric") {
+        fahrenheit.classList.remove("_active");
+        celsius.classList.add("_active");
+      }
+      if (unitsOfMeasurement == "imperial") {
+        celsius.classList.remove("_active");
+        fahrenheit.classList.add("_active");
+      }
+    }
+    if (!unitsOfMeasurement) {
+      celsius.classList.add("_active");
+    }
+  }
 };

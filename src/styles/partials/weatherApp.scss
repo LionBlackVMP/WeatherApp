@@ -1,0 +1,258 @@
+* {
+  font-family: generalFont;
+  font-size: 20px;
+  line-height: normal;
+}
+body {
+  background: url("../img/background.jpg");
+}
+
+.header {
+  background-color: $color-main;
+  opacity: 0.9;
+
+  .logo {
+    width: 50px;
+  }
+}
+
+.weather {
+  background-color: white;
+  box-shadow: 1px 1px 10px 1px black;
+  border: 2px solid $color-main;
+  padding: 15px;
+  margin: 100px auto;
+  max-width: 600px;
+  border-radius: 10px;
+  input {
+    margin-top: 17px;
+  }
+  .picture_temperature {
+    text-align: center;
+    color: $color-brown;
+    .temperature {
+      font-size: 70px;
+    }
+    .picture_text {
+      color: $color-offset-brown;
+      text-align: center;
+      position: relative;
+      top: -26px;
+      ._active {
+        color: $color-brown;
+      }
+      a {
+        text-decoration: none;
+        color: $color-offset-brown;
+      }
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  #city-name {
+    font-size: 40px;
+    text-transform: capitalize;
+    color: $color-brown;
+  }
+
+  .btn,
+  .weather-info {
+    color: $color-main;
+  }
+  .btn,
+  #city,
+  .btn:hover {
+    border-color: $color-main;
+  }
+  .btn:hover {
+    background-color: $color-main;
+  }
+
+  img {
+    display: block;
+    margin: 0 auto;
+  }
+  .weather-info {
+    list-style: none;
+    padding: 0;
+  }
+
+  .col {
+    .weekDays {
+      color: $color-main;
+      p {
+        color: $color-brown;
+        span {
+          color: $color-offset-brown;
+        }
+      }
+    }
+    text-align: center;
+    .weekIcon {
+      height: 60px;
+    }
+  }
+  .mainWeatherIcon {
+    height: 80px;
+  }
+
+  .nightThunderstorm,
+  .Thunderstorm {
+    background: url("../img/weather-icon-96/storm.png") center / auto 100%
+      no-repeat;
+  }
+  .Drizzle,
+  .Rain {
+    background: url("../img/weather-icon-96/rain.png") center / auto 100%
+      no-repeat;
+  }
+  .nightSnow,
+  .Snow {
+    background: url("../img/weather-icon-96/snow.png") center / auto 100%
+      no-repeat;
+  }
+  .Mist,
+  .Smoke,
+  .Haze,
+  .Dust,
+  .Fog,
+  .Sand,
+  .Dust,
+  .Ash,
+  .Squall,
+  .Tornado {
+    background: url("../img/weather-icon-96/haze.png") center / auto 100%
+      no-repeat;
+  }
+  .Clear {
+    background: url("../img/weather-icon-96/sun.png") center / auto 100%
+      no-repeat;
+  }
+  .nightClouds,
+  .Clouds {
+    background: url("../img/weather-icon-96/cloud.png") center / auto 100%
+      no-repeat;
+  }
+
+  .nightDrizzle,
+  .nightRain {
+    background: url("../img/weather-icon-96/rainy-night.png") center / auto 100%
+      no-repeat;
+  }
+  .nightMist,
+  .nightSmoke,
+  .nightHaze,
+  .nightDust,
+  .nightFog,
+  .nightSand,
+  .nightDust,
+  .nightAsh,
+  .nightSquall,
+  .nightTornado {
+    background: url("../img/weather-icon-96/fog.png") center / auto 100%
+      no-repeat;
+  }
+  .nightClear {
+    background: url("../img/weather-icon-96/moon-and-stars.png") center / auto
+      100% no-repeat;
+  }
+}
+@media screen and (max-width: $bp-xs) {
+  .weather {
+    input {
+      margin-top: 10px;
+    }
+    .picture_temperature {
+      .temperature {
+        font-size: 60px;
+      }
+      .picture_text {
+        position: relative;
+        top: -20px;
+      }
+    }
+    .col {
+      .weekIcon {
+        height: 50px;
+      }
+    }
+    .mainWeatherIcon {
+      height: 70px;
+    }
+    .temperature {
+      font-size: 50px;
+    }
+    #city-name {
+      font-size: 40px;
+    }
+  }
+}
+
+@media screen and (max-width: $bp-xxs) {
+  * {
+    font-size: 18px;
+  }
+  .weather {
+    input {
+      margin-top: 5px;
+    }
+    .picture_temperature {
+      .temperature {
+        font-size: 60px;
+      }
+      .picture_text {
+        position: relative;
+        top: -20px;
+      }
+    }
+    .col {
+      padding: 3px;
+      .weekIcon {
+        height: 45px;
+      }
+    }
+    .mainWeatherIcon {
+      height: 60px;
+    }
+
+    #city-name {
+      font-size: 40px;
+    }
+  }
+}
+
+@media screen and (max-width: $bp-xxxs) {
+  * {
+    font-size: 16px;
+  }
+  .weather {
+    input {
+      margin-top: 5px;
+    }
+    .picture_temperature {
+      .temperature {
+        font-size: 40px;
+      }
+      .picture_text {
+        position: relative;
+        top: -20px;
+      }
+    }
+    .col {
+      padding: 3px;
+      .weekIcon {
+        height: 45px;
+      }
+    }
+    .mainWeatherIcon {
+      height: 60px;
+    }
+
+    #city-name {
+      font-size: 30px;
+    }
+  }
+}

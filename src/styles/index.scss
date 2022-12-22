@@ -1,3 +1,4 @@
-@use "./partials/general.scss";
-@use "./fonts/fonts.scss";
+@import "./partials/general.scss";
+@import "./fonts/fonts.scss";
+@import "./partials/weatherApp.scss";
 @import "~bootstrap/scss/bootstrap";
